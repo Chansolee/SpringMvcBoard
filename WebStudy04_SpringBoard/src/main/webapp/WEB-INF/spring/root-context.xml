@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+<!-- 	스키마종류: beans , c, p, context -->
+<!-- 	Model layer 관리용 상위 컨테이너 설정 파일 -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	
+<!-- 	어플리케이션의 설정값을 외부로 분리시킨, appInfo.properties 로딩 -->
+	<util:properties id="appInfo" location="classpath:kr/or/ddit/appinfo.properties" />
+	
+	
+	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" 
+		p:maxUploadSizePerFile="#{appInfo['max-file-size']}"
+		p:maxUploadSize="#{appInfo['max-request-size']}"
+	/>
+	
+	<util:list id="allWsSessions" value-type="org.springframework.web.socket.WebSocketSession" />
+</beans>
